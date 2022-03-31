@@ -10,7 +10,11 @@ const controllersApiMenuShow = async (req, res) => {
         id: Number(id)
       },
       include: {
-        sets: true
+        sets: {
+          include: {
+            items: true
+          }
+        }
       }
     })
 
