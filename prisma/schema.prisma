@@ -20,8 +20,8 @@ model User {
 
 model Restaurant {
   id          Int     @unique @default(autoincrement())
-  coordinateX Int
-  coordinateY Int
+  coordinateX Float
+  coordinateY Float
   address     String
   orders      Order[]
 }
