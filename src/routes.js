@@ -10,6 +10,7 @@ router.get('/', (await import('./controllers/static/home.js')).default)
 router.post('/api/auth/signup', (await import('./controllers/api/auth/signup.js')).default)
 router.post('/api/auth/login', (await import('./controllers/api/auth/login.js')).default)
 router.delete('/api/auth/logout', (await import('./controllers/api/auth/logout.js')).default)
+router.get('/api/my/profile', (await import('./controllers/api/auth/profile.js')).default)
 
 router.get('/api/couponOnUsers', authenticateUser('json'), (await import('./controllers/api/couponOnUsers/all.js')).default)
 router.post('/api/couponOnUsers/:couponId', authenticateUser('json'), (await import('./controllers/api/couponOnUsers/new.js')).default)
