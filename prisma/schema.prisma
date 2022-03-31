@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @unique @default(autoincrement())
+  email        String
+  passwordHash String
+  orders       Order[]
+  coupons      CouponOnUser[]
+}
+
+model Restaurant {
+  id          Int     @unique @default(autoincrement())
+  coordinateX Int
+  coordinateY Int
+  address     String
+  orders      Order[]
+}
+
+model Coupon {
+  id             Int           @unique @default(autoincrement())
+  desc           String
+  discount       Int
+  sets           Set[]
+  imageUrl       String
+  CouponOnUser   CouponOnUser? @relation(fields: [couponOnUserId], references: [id])
+  couponOnUserId Int?          @unique
+
+}
+
+model CouponOnUser {
+  id      Int     @unique @default(autoincrement())
+  User    User    @relation(fields: [userId], references: [id])
+  userId  Int     @unique
+  coupon  Coupon?
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId Int?
+}
+
+model Order {
+  id           Int            @unique @default(autoincrement())
+  status       String
+  totalPrice   Int
+  time         DateTime       @default(now())
+  userId       Int
+  user         User           @relation(fields: [userId], references: [id])
+  restaurantId Int
+  restaurant   Restaurant     @relation(fields: [restaurantId], references: [id])
+  setOnOrders  SetOnOrder[]
+  couponOnUser CouponOnUser[]
+}
+
+model Menu {
+  id        Int    @unique @default(autoincrement())
+  name      String
+  startTime Int
+  endTime   Int
+  sets      Set[]
+}
+
+model SetOnOrder {
+  id          Int    @unique @default(autoincrement())
+  setQuantity Int
+  setSubtotal Int
+  itemDetails String
+  setId       Int
+  set         Set    @relation(fields: [setId], references: [id])
+  orderId     Int?
+  order       Order? @relation(fields: [orderId], references: [id])
+}
+
+model Set {
+  id          Int          @unique @default(autoincrement())
+  type        String
+  name        String
+  basePrice   Int
+  imageUrl    String
+  menuId      Int?
+  menus       Menu?        @relation(fields: [menuId], references: [id])
+  itemOnSets  ItemOnSet[]
+  setOnOrders SetOnOrder[]
+  Coupon      Coupon?      @relation(fields: [couponId], references: [id])
+  couponId    Int?
+}
+
+model ItemOnSet {
+  id           Int     @unique @default(autoincrement())
+  itemQuantity Int
+  canChange    Boolean
+  setId        Int?
+  set          Set?    @relation(fields: [setId], references: [id])
+  itemId       Int
+  item         Item    @relation(fields: [itemId], references: [id])
+}
+
+model Item {
+  id          Int         @unique @default(autoincrement())
+  category    String
+  name        String
+  basePrice   Int
+  upgradeCost Int         @default(0)
+  imageUrl    String
+  itemOnSets  ItemOnSet[]
+}
