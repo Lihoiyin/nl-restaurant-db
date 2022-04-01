@@ -4,7 +4,6 @@ import _ from 'lodash'
 
 import prisma from '../../_helpers/prisma.js'
 import handleErrors from '../../_helpers/handle-errors.js'
-import uploadFileAsync from '../../_helpers/upload-file.js'
 
 const signupSchema = yup.object({
   email: yup.string().email().required().test({
@@ -26,7 +25,6 @@ const controllersApiAuthSignup = async (req, res) => {
   try {
     const { body } = req
     const verifiedData = await signupSchema.validate(body, { abortEarly: false, stripUnknown: true })
-    await uploadFileAsync(verifiedData, req)
 
     const newUser = await prisma.user.create({
       data: {

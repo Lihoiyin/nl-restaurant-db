@@ -21,7 +21,8 @@ app.use(ironSession({
   cookieName: 'iron-session',
   password: process.env.SECRET_COOKIE_PASSWORD,
   cookieOptions: {
-    secure: process.env.NODE_ENV === 'production'
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   }
 }))
 

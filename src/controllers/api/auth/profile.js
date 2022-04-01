@@ -7,11 +7,11 @@ const controllersApiAuthShow = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: req.session?.user?.id
+        id: Number(req.session?.user?.id) || 0
       }
     })
 
-    return res.status(201).json(_.omit(user, ['passwordHash']))
+    return res.status(200).json(_.omit(user, ['passwordHash']))
   } catch (err) {
     return handleErrors(res, err)
   }
