@@ -3,9 +3,6 @@ import authenticateUser from './_middlewares/authenticate-user.js'
 
 const router = Router()
 
-// STATIC
-router.get('/', (await import('./controllers/static/home.js')).default)
-
 // API | Auth
 router.post('/api/auth/signup', (await import('./controllers/api/auth/signup.js')).default)
 router.post('/api/auth/login', (await import('./controllers/api/auth/login.js')).default)
